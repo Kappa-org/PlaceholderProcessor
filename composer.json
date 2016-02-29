@@ -1,0 +1,32 @@
+{
+  "name": "kappa/placeholder-processor",
+  "description": "Easy system for working with placeholders in texts ",
+  "keywords": ["kappa", "processor", "text", "placeholder"],
+  "homepage": "https://github.com/Kappa-org/PlaceholderProcessor",
+  "license": "MIT",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Ondřej Záruba",
+      "homepage": "http://zaruba-ondrej.cz"
+    }
+  ],
+  "support": {
+    "email": "zarubaondra@gmail.com",
+    "issues": "https://github.com/Kappa-org/PlaceholderProcessor/issues"
+  },
+  "require": {
+    "php": ">= 5.4.0"
+  },
+  "require-dev": {
+    "nette/tester": "~1.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Kappa\\PlaceholderProcessor\\": "src/"
+    },
+    "classmap": [
+      "src/exceptions.php"
+    ]
+  }
+}
