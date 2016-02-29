@@ -27,9 +27,7 @@ class TextFormatter
 	 */
 	public function __construct(array $processors = [])
 	{
-		foreach ($processors as $processor) {
-			$this->addProcessor($processor);
-		}
+		$this->setProcessors($processors);
 	}
 
 	/**

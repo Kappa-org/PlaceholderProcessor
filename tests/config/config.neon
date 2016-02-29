@@ -1,0 +1,6 @@
+extensions:
+	placeholderProcessor: Kappa\PlaceholderProcessor\DI\PlaceholderProcessorExtension
+
+placeholderProcessor:
+	processors:
+		- KappaTests\PlaceholderProcessor\Tests\BasicProcessor
