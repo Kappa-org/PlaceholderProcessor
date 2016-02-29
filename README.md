@@ -1,4 +1,4 @@
-# Kappa\PlaceholderProcessor
+# Kappa\PlaceholderProcessor [![Build Status](https://travis-ci.org/Kappa-org/PlaceholderProcessor.svg?branch=master)](https://travis-ci.org/Kappa-org/PlaceholderProcessor)
 
 Easy system for working with placeholders in texts
 
