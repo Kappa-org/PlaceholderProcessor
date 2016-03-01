@@ -10,7 +10,9 @@
 
 namespace Kappa\PlaceholderProcessor\DI;
 
+use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
+use Nette\DI\Statement;
 
 /**
  * Class PlaceholderProcessorExtension
@@ -29,10 +31,19 @@ class PlaceholderProcessorExtension extends CompilerExtension
 
 		$processors = [];
 		foreach ($config['processors'] as $processor) {
-			$processorName = "placeholderProcessor." . md5($processor);
-			$builder->addDefinition($this->prefix($processorName))
-				->setClass($processor)
-				->setAutowired(false);
+			if (is_string($processor)) {
+				$processorName = "placeholderProcessor." . md5($processor);
+			} else {
+				$processorName = "placeholderProcessor." . md5($processor->value);
+			}
+			$def = $builder->addDefinition($this->prefix($processorName));
+			list($def->factory) = Compiler::filterArguments(array(
+				is_string($processor) ? new Statement($processor) : $processor
+			));
+			if (class_exists($def->factory->entity)) {
+				$def->class = $def->factory->entity;
+			}
+			$def->setAutowired(false);
 			$processors[] = $this->prefix("@" . $processorName);
 		}
 
