@@ -35,11 +35,12 @@ class PlaceholderProcessorExtensionTest extends TestCase
 
 	public function testTextFormatter()
 	{
-		$type = "Kappa\PlaceholderProcessor\TextFormatter";
+		$type = 'Kappa\PlaceholderProcessor\TextFormatter';
 		/** @var TextFormatter $service */
 		$service = $this->container->getByType($type);
 		Assert::type($type, $this->container->getByType($type));
 		Assert::same("Hello test", $service->format("Hello %placeholder%", ['name' => 'test']));
+		Assert::true($service->isStrictMode());
 	}
 }
 

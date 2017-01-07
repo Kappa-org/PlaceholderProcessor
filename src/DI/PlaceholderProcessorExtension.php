@@ -49,7 +49,8 @@ class PlaceholderProcessorExtension extends CompilerExtension
 		}
 
 		$builder->addDefinition($this->prefix('textFormatter'))
-			->setClass('Kappa\PlaceholderProcessor\TextFormatter', [$processors, $config['strict']]);
+			->setClass('Kappa\PlaceholderProcessor\TextFormatter', [$processors])
+			->addSetup('setStrictMode', [$config['strict']]);
 	}
 
 }

@@ -2,5 +2,6 @@ extensions:
 	placeholderProcessor: Kappa\PlaceholderProcessor\DI\PlaceholderProcessorExtension
 
 placeholderProcessor:
+	strict: true
 	processors:
 		- KappaTests\PlaceholderProcessor\Tests\BasicProcessor
