@@ -19,15 +19,37 @@ class TextFormatter
 	const MASK = "~%(\w+)%~";
 
 	/** @var IPlaceholderProcessor[] */
-	private $processors;
+	private $processors = [];
+
+	/** @var bool */
+	private $strictMode = false;
 
 	/**
 	 * TextFormatter constructor.
-	 * @param array $processors
+	 * @param IPlaceholderProcessor[] $processors
 	 */
 	public function __construct(array $processors = [])
 	{
 		$this->setProcessors($processors);
+	}
+
+	/**
+	 * @param bool $strict
+	 * @return $this
+	 */
+	public function setStrictMode($strict)
+	{
+		$this->strictMode = $strict;
+
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isStrictMode()
+	{
+		return $this->strictMode;
 	}
 
 	/**
@@ -65,8 +87,12 @@ class TextFormatter
 		if (preg_match_all(self::MASK, $input, $matches)) {
 			if ($matches[1]) {
 				foreach ($matches[1] as $name) {
-					if (array_key_exists($name, $this->processors)) {
-						$input = str_replace("%{$name}%", $this->process($name, $externalSources), $input);
+					if (!array_key_exists($name, $this->processors)) {
+						if ($this->strictMode) {
+							throw new MissingPlaceholderProcessorException('Missing placeholder for \'' . $name . '\' placeholder');
+						}
+					} else {
+						$input = str_replace("%{$name}%", $this->process($this->processors[$name], $externalSources), $input);
 					}
 				}
 			}
@@ -76,19 +102,18 @@ class TextFormatter
 	}
 
 	/**
-	 * @param string $name
+	 * @param IPlaceholderProcessor $processor
 	 * @param array $sources
 	 * @return string
 	 */
-	private function process($name, array $sources)
+	private function process(IPlaceholderProcessor $processor, array $sources)
 	{
-		$processor = $this->processors[$name];
 		$concreteSources = [];
 		foreach ($processor->getExternalSources() as $sourceName) {
 			if (array_key_exists($sourceName, $sources)) {
 				$concreteSources[$sourceName] = $sources[$sourceName];
 			} else {
-				throw new InvalidStateException("Invalid external source: {$name}");
+				throw new MissingExternalSourceException("Invalid external source: {$processor->getName()}");
 			}
 		}
 

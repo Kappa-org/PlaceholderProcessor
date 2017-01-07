@@ -11,7 +11,13 @@
 namespace Kappa\PlaceholderProcessor;
 
 /**
- * Class InvalidStateException
+ * Class MissingExternalSourceException
  * @package Kappa\PlaceholderProcessor
  */
-class InvalidStateException extends \LogicException {}
+class MissingExternalSourceException extends \LogicException {}
+
+/**
+ * Class MissingPlaceholderProcessorException
+ * @package Kappa\PlaceholderProcessor
+ */
+class MissingPlaceholderProcessorException extends \LogicException {}

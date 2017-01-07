@@ -22,6 +22,7 @@ class PlaceholderProcessorExtension extends CompilerExtension
 {
 	private $defaultConfig = [
 		'processors' => [],
+		'strict' => false
 	];
 
 	public function loadConfiguration()
@@ -48,7 +49,7 @@ class PlaceholderProcessorExtension extends CompilerExtension
 		}
 
 		$builder->addDefinition($this->prefix('textFormatter'))
-			->setClass('Kappa\PlaceholderProcessor\TextFormatter', [$processors]);
+			->setClass('Kappa\PlaceholderProcessor\TextFormatter', [$processors, $config['strict']]);
 	}
 
 }

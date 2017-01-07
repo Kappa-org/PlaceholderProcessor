@@ -33,7 +33,7 @@ class TextFormatterTest extends TestCase
 
 	public function testSetProcessors()
 	{
-		$textFormatter = new TextFormatter();
+		$textFormatter = new TextFormatter([], false);
 		Assert::type(get_class($textFormatter), $textFormatter->setProcessors([new BasicProcessor()]));
 		Assert::type(get_class($textFormatter), new TextFormatter([new BasicProcessor()]));
 	}
@@ -45,13 +45,48 @@ class TextFormatterTest extends TestCase
 		Assert::same("Hello test %next%", $textFormatter->format($text, ['name' => 'test']));
 	}
 
-	public function testInvalidPlaceholder()
+	public function testMissingPlaceholderWithoutStrictMode()
 	{
-		$textFormatter = new TextFormatter([new BasicProcessor()]);
-		$text = "Hello %placeholder% %next%";
-		Assert::exception(function () use($textFormatter, $text) {
+		$textFormatter = new TextFormatter();
+		$textFormatter->setStrictMode(false);
+		$text = 'Hello %placeholder%';
+		Assert::same($text, $textFormatter->format($text));
+	}
+
+	public function testMissingPlaceholderWithStrictMode()
+	{
+		Assert::throws(function () {
+			$textFormatter = new TextFormatter();
+			$textFormatter->setStrictMode(true);
+			$text = 'Hello %placeholder%';
 			$textFormatter->format($text);
-		}, 'Kappa\PlaceholderProcessor\InvalidStateException');
+		}, '\Kappa\PlaceholderProcessor\MissingPlaceholderProcessorException');
+	}
+
+	public function testMissingExternalSource()
+	{
+		Assert::throws(function () {
+			$textFormatter = new TextFormatter([new BasicProcessor()], false);
+			$text = 'Hello %placeholder%';
+			$textFormatter->format($text);
+		}, '\Kappa\PlaceholderProcessor\MissingExternalSourceException');
+	}
+
+	public function testSetStrictMode()
+	{
+		$withoutStrict = new TextFormatter();
+		$withoutStrict->setStrictMode(false);
+		Assert::false($withoutStrict->isStrictMode());
+
+		$withStrict = new TextFormatter();
+		$withStrict->setStrictMode(true);
+		Assert::true($withStrict->isStrictMode());
+	}
+
+	public function testDefaultScriptMode()
+	{
+		$textFormatter = new TextFormatter();
+		Assert::false($textFormatter->isStrictMode());
 	}
 }
 
