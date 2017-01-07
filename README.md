@@ -2,6 +2,16 @@
 
 Easy system for working with placeholders in texts
 
+## Content
+
+* [Requirements](#requirements)
+* [Installation](#installation)
+* [Usages](#usages)
+    * [1. step - Prepare custom placeholder processors](#1-step---prepare-custom-placeholder-processors)
+    * [2. step - Create a new instance](#2-step---create-a-new-instance)
+    * [3. step - Usage](#3-step---usage)
+    * [Strict mode](#strict-mode)
+
 ## Requirements
 
 Full list of dependencies you can get from [Composer config file](https://github.com/Kappa-org/PlaceholderProcessor/blob/master/composer.json)
