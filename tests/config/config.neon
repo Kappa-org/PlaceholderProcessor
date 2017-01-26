@@ -1,3 +1,8 @@
+services:
+	placeholderProcessor:
+		class: KappaTests\PlaceholderProcessor\Tests\BasicProcessor
+		tags: [kappa.placeholder_processor]
+
 extensions:
 	placeholderProcessor: Kappa\PlaceholderProcessor\DI\PlaceholderProcessorExtension
 

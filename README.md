@@ -104,13 +104,16 @@ or when you use [Nette Framework](https://nette.org) you can
 register this package as extension
 
 ```neon
+services:
+	mySuperProcessor:
+	    class: MySuperPlaceholderProcessor
+	    tags: [kappa.placeholder_processor]
+
 extensions: 
     placeholderProcessor: Kappa\PlaceholderProcessor\DI\PlaceholderProcessorExtension
     
 placeholderProcessor:
-    placeholders:
-        - MySuperPlaceholderProcessor
-```
+	strict: true
 
 ```php
 public function __construct(TextFormatter $textFormatter) {

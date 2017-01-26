@@ -12,6 +12,7 @@ namespace Kappa\PlaceholderProcessor\DI;
 
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
+use Nette\DI\Helpers;
 use Nette\DI\Statement;
 
 /**
@@ -20,8 +21,9 @@ use Nette\DI\Statement;
  */
 class PlaceholderProcessorExtension extends CompilerExtension
 {
+	const PROCESSOR_TAG = 'kappa.placeholder_processor';
+
 	private $defaultConfig = [
-		'processors' => [],
 		'strict' => false
 	];
 
@@ -30,27 +32,17 @@ class PlaceholderProcessorExtension extends CompilerExtension
 		$config = $this->getConfig($this->defaultConfig);
 		$builder = $this->getContainerBuilder();
 
-		$processors = [];
-		foreach ($config['processors'] as $processor) {
-			if (is_string($processor)) {
-				$processorName = "placeholderProcessor." . md5($processor);
-			} else {
-				$processorName = "placeholderProcessor." . md5($processor->value);
-			}
-			$def = $builder->addDefinition($this->prefix($processorName));
-			list($def->factory) = Compiler::filterArguments(array(
-				is_string($processor) ? new Statement($processor) : $processor
-			));
-			if (class_exists($def->factory->entity)) {
-				$def->class = $def->factory->entity;
-			}
-			$def->setAutowired(false);
-			$processors[] = $this->prefix("@" . $processorName);
-		}
-
 		$builder->addDefinition($this->prefix('textFormatter'))
-			->setClass('Kappa\PlaceholderProcessor\TextFormatter', [$processors])
+			->setClass('Kappa\PlaceholderProcessor\TextFormatter')
 			->addSetup('setStrictMode', [$config['strict']]);
 	}
 
+	public function beforeCompile()
+	{
+		$builder = $this->getContainerBuilder();
+		$textFormatter = $builder->getDefinition($this->prefix('textFormatter'));
+		foreach (array_keys($builder->findByTag(self::PROCESSOR_TAG)) as $serviceName) {
+			$textFormatter->addSetup('addProcessor', ['@' . $serviceName]);
+		}
+	}
 }
